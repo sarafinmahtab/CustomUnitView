@@ -54,13 +54,13 @@ class CustomUnitView : ConstraintLayout {
     private var useFloat = false
     private var unitTypes = -1
     private var unitTypesText = ""
-    private var defaultAmount = -1.0
+    private var defaultAmount = -1F
     private var changeFactor = -1
 
-    private var currentAmount = 0.0
+    private var currentAmount = 0F
 
-    private val minRange = 0.0
-    private val maxRange = 100000000.0
+    private val minRange = 0F
+    private val maxRange = 100000000F
 
 
     private fun setAttributes(context: Context, attrs: AttributeSet?) {
@@ -73,14 +73,15 @@ class CustomUnitView : ConstraintLayout {
 
         useFloat = typedArray.getBoolean(R.styleable.CustomUnitView_useFloat, false)
         unitTypes = typedArray.getInteger(R.styleable.CustomUnitView_unitTypes, 0)
-        defaultAmount = typedArray.getFloat(R.styleable.CustomUnitView_defaultValue, -1F).toDouble().roundOffDecimal()
+        defaultAmount =
+            typedArray.getFloat(R.styleable.CustomUnitView_defaultValue, -1F).roundOffDecimal()
         changeFactor = typedArray.getInt(R.styleable.CustomUnitView_changeFactor, -1)
 
         // If amount and change factor is not set yet
         when (unitTypes) {
             0 -> {
                 // minutes
-                updateDefaultAmount(60.0)
+                updateDefaultAmount(60.0F)
                 updateChangeFactor(5)
 
                 unitTypesText = "minutes a day"
@@ -88,7 +89,7 @@ class CustomUnitView : ConstraintLayout {
 
             1 -> {
                 // hours
-                updateDefaultAmount(60.0)
+                updateDefaultAmount(60.0F)
                 updateChangeFactor(1)
 
                 unitTypesText = "hours a day"
@@ -96,7 +97,7 @@ class CustomUnitView : ConstraintLayout {
 
             2 -> {
                 // kg
-                updateDefaultAmount(68.0)
+                updateDefaultAmount(68.0F)
                 updateChangeFactor(2)
 
                 unitTypesText = "kilogram"
@@ -104,7 +105,7 @@ class CustomUnitView : ConstraintLayout {
 
             3 -> {
                 // lbs
-                updateDefaultAmount(145.2)
+                updateDefaultAmount(145.2F)
                 updateChangeFactor(3)
 
                 unitTypesText = "lbs"
@@ -118,8 +119,8 @@ class CustomUnitView : ConstraintLayout {
         if (changeFactor == -1) changeFactor = factor
     }
 
-    private fun updateDefaultAmount(amount: Double) {
-        if (defaultAmount == -1.0) defaultAmount = amount
+    private fun updateDefaultAmount(amount: Float) {
+        if (defaultAmount == -1F) defaultAmount = amount
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -181,20 +182,22 @@ class CustomUnitView : ConstraintLayout {
     }
 
     private fun increment() {
-        currentAmount = (currentAmount + changeFactor).roundOffDecimal() //TODO("Double and Float addition/subtraction has some bugs")
+        currentAmount =
+            (currentAmount + changeFactor).roundOffDecimal() //TODO("Double and Float addition/subtraction has some bugs")
         if (currentAmount > maxRange) {
             currentAmount = maxRange
         }
     }
 
     private fun decrement() {
-        currentAmount = (currentAmount - changeFactor).roundOffDecimal() //TODO("Double and Float addition/subtraction has some bugs")
+        currentAmount =
+            (currentAmount - changeFactor).roundOffDecimal() //TODO("Double and Float addition/subtraction has some bugs")
         if (currentAmount < minRange) {
             currentAmount = minRange
         }
     }
 
-    private fun updateAmount(amount: Double) {
+    private fun updateAmount(amount: Float) {
         try {
             if (useFloat) {
                 unitAmountTextView.text = amount.toString()
@@ -252,8 +255,8 @@ interface UnitAmountChangeListener {
 }
 
 
-fun Double.roundOffDecimal(): Double {
+fun Float.roundOffDecimal(): Float {
     val df = DecimalFormat("#.#")
     df.roundingMode = RoundingMode.CEILING
-    return df.format(this).toDouble()
+    return df.format(this).toFloat()
 }
