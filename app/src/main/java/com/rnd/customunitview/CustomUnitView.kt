@@ -53,7 +53,7 @@ class CustomUnitView : ConstraintLayout {
 
     // Attributes
     private var useFloat = false
-    private var unitTypes = -1
+    private var unitType = -1
     private var unitTypesText = ""
     private var defaultAmount = -1F
     private var changeFactor = -1F
@@ -75,16 +75,19 @@ class CustomUnitView : ConstraintLayout {
         val typedArray = context.obtainStyledAttributes(attrs, R.styleable.CustomUnitView)
 
         useFloat = typedArray.getBoolean(R.styleable.CustomUnitView_useFloat, false)
-        unitTypes = typedArray.getInteger(R.styleable.CustomUnitView_unitTypes, 0)
+        unitType = typedArray.getInteger(R.styleable.CustomUnitView_unitTypes, 0)
         defaultAmount =
             typedArray.getFloat(R.styleable.CustomUnitView_defaultValue, -1F).roundOffDecimal()
         changeFactor = typedArray.getFloat(R.styleable.CustomUnitView_changeFactor, -1F).roundOffDecimal()
 
         unitTextColor = typedArray.getColor(R.styleable.CustomUnitView_unitTextColor, Color.TRANSPARENT)
 
-        // If amount and change factor is not set yet
-        when (unitTypes) {
-            0 -> {
+        typedArray.recycle()
+    }
+
+    private fun initRequiredAttributes(unit: Int) {
+        when (unit) {
+            MINUTES -> {
                 // minutes
                 updateDefaultAmount(60.0F)
                 updateChangeFactor(5F)
@@ -92,7 +95,7 @@ class CustomUnitView : ConstraintLayout {
                 unitTypesText = "minutes a day"
             }
 
-            1 -> {
+            HOURS -> {
                 // hours
                 updateDefaultAmount(60.0F)
                 updateChangeFactor(1F)
@@ -100,7 +103,7 @@ class CustomUnitView : ConstraintLayout {
                 unitTypesText = "hours a day"
             }
 
-            2 -> {
+            KG -> {
                 // kg
                 updateDefaultAmount(68.0F)
                 updateChangeFactor(0.5F)
@@ -108,7 +111,7 @@ class CustomUnitView : ConstraintLayout {
                 unitTypesText = "kilogram"
             }
 
-            3 -> {
+            LBS -> {
                 // lbs
                 updateDefaultAmount(145.2F)
                 updateChangeFactor(0.5F)
@@ -117,7 +120,14 @@ class CustomUnitView : ConstraintLayout {
             }
         }
 
-        typedArray.recycle()
+        if (unitTextColor != Color.TRANSPARENT) {
+            unitAmountTextView.setTextColor(unitTextColor)
+            unitNameTextView.setTextColor(unitTextColor)
+        }
+
+        currentAmount = defaultAmount
+        unitNameTextView.text = unitTypesText
+        updateAmount(currentAmount)
     }
 
     private fun updateChangeFactor(factor: Float) {
@@ -142,14 +152,8 @@ class CustomUnitView : ConstraintLayout {
         unitNameTextView = customUnitLayout.findViewById(R.id.unitNameTextView)
         incrementImageButton = customUnitLayout.findViewById(R.id.unitIncrementImageButton)
 
-        if (unitTextColor != Color.TRANSPARENT) {
-            unitAmountTextView.setTextColor(unitTextColor)
-            unitNameTextView.setTextColor(unitTextColor)
-        }
-
-        currentAmount = defaultAmount
-        unitNameTextView.text = unitTypesText
-        updateAmount(currentAmount)
+        // If amount and change factor is not set yet, will choose default
+        initRequiredAttributes(unitType)
 
         // Decrement View listeners
         decrementImageButton.setOnLongClickListener {
@@ -240,6 +244,24 @@ class CustomUnitView : ConstraintLayout {
         return defaultAmount.toString()
     }
 
+    fun setUseFloat(useFloat: Boolean) {
+        this.useFloat = useFloat
+    }
+
+    fun setChangeFactor(factor: Float) {
+        this.changeFactor = factor
+    }
+
+    fun setDefaultValue(value: Float) {
+        this.defaultAmount = value
+        updateAmount(value)
+    }
+
+    fun setUnitType(unit: Int) {
+        this.unitType = unit
+        initRequiredAttributes(unitType)
+    }
+
     private val counterRunnable = object : Runnable {
         override fun run() {
             if (autoIncrement) {
@@ -256,7 +278,14 @@ class CustomUnitView : ConstraintLayout {
 
     override fun onDetachedFromWindow() {
         super.onDetachedFromWindow()
-        handler.removeCallbacks(counterRunnable)
+        countHandler.removeCallbacks(counterRunnable)
+    }
+
+    companion object {
+        const val MINUTES = 0
+        const val HOURS = 1
+        const val KG = 2
+        const val LBS = 3
     }
 }
 
