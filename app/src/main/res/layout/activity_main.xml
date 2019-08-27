@@ -16,6 +16,7 @@
             app:unitTypes="kg"
             app:changeFactor="1"
             app:defaultValue="65.5"
+            app:unitTextColor="@color/colorPrimaryDark"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"

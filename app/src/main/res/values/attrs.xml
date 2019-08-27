@@ -10,5 +10,6 @@
             <enum name="kg" value="2" />
             <enum name="lbs" value="3" />
         </attr>
+        <attr name="unitTextColor" format="color|reference" />
     </declare-styleable>
 </resources>

@@ -2,6 +2,7 @@ package com.rnd.customunitview
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.graphics.Color
 import android.os.Handler
 import android.util.AttributeSet
 import android.view.LayoutInflater
@@ -57,6 +58,8 @@ class CustomUnitView : ConstraintLayout {
     private var defaultAmount = -1F
     private var changeFactor = -1
 
+    private var unitTextColor = Color.TRANSPARENT
+
     private var currentAmount = 0F
 
     private val minRange = 0F
@@ -76,6 +79,8 @@ class CustomUnitView : ConstraintLayout {
         defaultAmount =
             typedArray.getFloat(R.styleable.CustomUnitView_defaultValue, -1F).roundOffDecimal()
         changeFactor = typedArray.getInt(R.styleable.CustomUnitView_changeFactor, -1)
+
+        unitTextColor = typedArray.getColor(R.styleable.CustomUnitView_unitTextColor, Color.TRANSPARENT)
 
         // If amount and change factor is not set yet
         when (unitTypes) {
@@ -136,6 +141,11 @@ class CustomUnitView : ConstraintLayout {
         unitAmountTextView = customUnitLayout.findViewById(R.id.unitAmountTextView)
         unitNameTextView = customUnitLayout.findViewById(R.id.unitNameTextView)
         incrementImageButton = customUnitLayout.findViewById(R.id.unitIncrementImageButton)
+
+        if (unitTextColor != Color.TRANSPARENT) {
+            unitAmountTextView.setTextColor(unitTextColor)
+            unitNameTextView.setTextColor(unitTextColor)
+        }
 
         currentAmount = defaultAmount
         unitNameTextView.text = unitTypesText
