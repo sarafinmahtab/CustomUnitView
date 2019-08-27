@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <declare-styleable name="CustomUnitView">
-        <attr name="defaultValue" format="integer"/>
-        <attr name="changeFactor" format="integer"/>
+        <attr name="defaultValue" format="float"/>
+        <attr name="changeFactor" format="float"/>
         <attr name="unitTypes" format="enum">
             <enum name="minutes" value="0"/>
             <enum name="hours" value="1"/>

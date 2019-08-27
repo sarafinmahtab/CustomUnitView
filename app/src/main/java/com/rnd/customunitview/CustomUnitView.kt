@@ -36,13 +36,13 @@ class CustomUnitView : ConstraintLayout {
 
     private var unitTypes = -1
     private var unitTypesText = ""
-    private var defaultAmount = -1
-    private var changeFactor = -1
+    private var defaultAmount = -1f
+    private var changeFactor = -1f
 
-    private var currentUnitAmount = 0
+    private var currentAmount = 0f
 
-    private val unitLowerLimit = 0
-    private val unitUpperLimit = 100000
+    private val minRange = 0f
+    private val maxRange = 1000000000f
 
 
     private fun setAttributes(context: Context, attrs: AttributeSet?) {
@@ -54,39 +54,39 @@ class CustomUnitView : ConstraintLayout {
         val typedArray = context.obtainStyledAttributes(attrs, R.styleable.CustomUnitView)
 
         unitTypes = typedArray.getInteger(R.styleable.CustomUnitView_unitTypes, 0)
-        defaultAmount = typedArray.getInteger(R.styleable.CustomUnitView_defaultValue, -1)
-        changeFactor = typedArray.getInteger(R.styleable.CustomUnitView_changeFactor, -1)
+        defaultAmount = typedArray.getFloat(R.styleable.CustomUnitView_defaultValue, -1f)
+        changeFactor = typedArray.getFloat(R.styleable.CustomUnitView_changeFactor, -1f)
 
         // If amount and change factor is not set yet
         when (unitTypes) {
             0 -> {
                 // minutes
-                updateDefaultAmount(60)
-                updateChangeFactor(5)
+                updateDefaultAmount(60f)
+                updateChangeFactor(5f)
 
                 unitTypesText = "minutes a day"
             }
 
             1 -> {
                 // hours
-                updateDefaultAmount(60)
-                updateChangeFactor(1)
+                updateDefaultAmount(60f)
+                updateChangeFactor(1f)
 
                 unitTypesText = "hours a day"
             }
 
             2 -> {
                 // kg
-                updateDefaultAmount(68)
-                updateChangeFactor(2)
+                updateDefaultAmount(68f)
+                updateChangeFactor(2f)
 
-                unitTypesText = "kilograms"
+                unitTypesText = "kilogram"
             }
 
             3 -> {
                 // lbs
-                updateDefaultAmount(60)
-                updateChangeFactor(3)
+                updateDefaultAmount(145.2f)
+                updateChangeFactor(3f)
 
                 unitTypesText = "lbs"
             }
@@ -95,12 +95,12 @@ class CustomUnitView : ConstraintLayout {
         typedArray.recycle()
     }
 
-    private fun updateChangeFactor(factor: Int) {
-        if (changeFactor == -1) changeFactor = factor
+    private fun updateChangeFactor(factor: Float) {
+        if (changeFactor == -1f) changeFactor = factor
     }
 
-    private fun updateDefaultAmount(amount: Int) {
-        if (defaultAmount == -1) defaultAmount = amount
+    private fun updateDefaultAmount(amount: Float) {
+        if (defaultAmount == -1f) defaultAmount = amount
     }
 
     private fun initView() {
@@ -112,41 +112,41 @@ class CustomUnitView : ConstraintLayout {
         unitNameTextView = customUnitLayout.findViewById(R.id.unitNameTextView)
         unitIncrementImageButton = customUnitLayout.findViewById(R.id.unitIncrementImageButton)
 
-        currentUnitAmount = defaultAmount
-        unitAmountTextView.text = defaultAmount.toString()
+        currentAmount = defaultAmount
         unitNameTextView.text = unitTypesText
+        updateAmount(currentAmount)
 
         unitDecrementImageButton.setOnClickListener {
             decrement()
-            updateAmount(currentUnitAmount)
+            updateAmount(currentAmount)
         }
 
         unitIncrementImageButton.setOnClickListener {
             increment()
-            updateAmount(currentUnitAmount)
+            updateAmount(currentAmount)
         }
     }
 
     private fun increment() {
-        currentUnitAmount += changeFactor
-        if (currentUnitAmount > unitUpperLimit) {
-            currentUnitAmount = unitUpperLimit
+        currentAmount += changeFactor
+        if (currentAmount > maxRange) {
+            currentAmount = maxRange
         }
     }
 
     private fun decrement() {
-        currentUnitAmount -= changeFactor
-        if (currentUnitAmount < unitLowerLimit) {
-            currentUnitAmount = unitLowerLimit
+        currentAmount -= changeFactor
+        if (currentAmount < minRange) {
+            currentAmount = minRange
         }
     }
 
-    private fun updateAmount(amount: Int) {
+    private fun updateAmount(amount: Float) {
         try {
             unitAmountTextView.text = amount.toString()
             listener.onAmountChanged(amount.toString())
         } catch (e: Exception) {
-            throw RuntimeException("Amount changed listener is not initialized")
+//            throw RuntimeException("Amount changed listener is not initialized")
         }
     }
 
