@@ -56,7 +56,7 @@ class CustomUnitView : ConstraintLayout {
     private var unitTypes = -1
     private var unitTypesText = ""
     private var defaultAmount = -1F
-    private var changeFactor = -1
+    private var changeFactor = -1F
 
     private var unitTextColor = Color.TRANSPARENT
 
@@ -78,7 +78,7 @@ class CustomUnitView : ConstraintLayout {
         unitTypes = typedArray.getInteger(R.styleable.CustomUnitView_unitTypes, 0)
         defaultAmount =
             typedArray.getFloat(R.styleable.CustomUnitView_defaultValue, -1F).roundOffDecimal()
-        changeFactor = typedArray.getInt(R.styleable.CustomUnitView_changeFactor, -1)
+        changeFactor = typedArray.getFloat(R.styleable.CustomUnitView_changeFactor, -1F).roundOffDecimal()
 
         unitTextColor = typedArray.getColor(R.styleable.CustomUnitView_unitTextColor, Color.TRANSPARENT)
 
@@ -87,7 +87,7 @@ class CustomUnitView : ConstraintLayout {
             0 -> {
                 // minutes
                 updateDefaultAmount(60.0F)
-                updateChangeFactor(5)
+                updateChangeFactor(5F)
 
                 unitTypesText = "minutes a day"
             }
@@ -95,7 +95,7 @@ class CustomUnitView : ConstraintLayout {
             1 -> {
                 // hours
                 updateDefaultAmount(60.0F)
-                updateChangeFactor(1)
+                updateChangeFactor(1F)
 
                 unitTypesText = "hours a day"
             }
@@ -103,7 +103,7 @@ class CustomUnitView : ConstraintLayout {
             2 -> {
                 // kg
                 updateDefaultAmount(68.0F)
-                updateChangeFactor(2)
+                updateChangeFactor(0.5F)
 
                 unitTypesText = "kilogram"
             }
@@ -111,7 +111,7 @@ class CustomUnitView : ConstraintLayout {
             3 -> {
                 // lbs
                 updateDefaultAmount(145.2F)
-                updateChangeFactor(3)
+                updateChangeFactor(0.5F)
 
                 unitTypesText = "lbs"
             }
@@ -120,8 +120,8 @@ class CustomUnitView : ConstraintLayout {
         typedArray.recycle()
     }
 
-    private fun updateChangeFactor(factor: Int) {
-        if (changeFactor == -1) changeFactor = factor
+    private fun updateChangeFactor(factor: Float) {
+        if (changeFactor == -1F) changeFactor = factor
     }
 
     private fun updateDefaultAmount(amount: Float) {
@@ -193,7 +193,7 @@ class CustomUnitView : ConstraintLayout {
 
     private fun increment() {
         currentAmount =
-            (currentAmount + changeFactor).roundOffDecimal() //TODO("Double and Float addition/subtraction has some bugs")
+            (currentAmount + changeFactor).roundOffDecimal() //Double and Float addition/subtraction has some bugs
         if (currentAmount > maxRange) {
             currentAmount = maxRange
         }
@@ -201,7 +201,7 @@ class CustomUnitView : ConstraintLayout {
 
     private fun decrement() {
         currentAmount =
-            (currentAmount - changeFactor).roundOffDecimal() //TODO("Double and Float addition/subtraction has some bugs")
+            (currentAmount - changeFactor).roundOffDecimal() //Double and Float addition/subtraction has some bugs
         if (currentAmount < minRange) {
             currentAmount = minRange
         }

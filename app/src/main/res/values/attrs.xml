@@ -3,7 +3,7 @@
     <declare-styleable name="CustomUnitView">
         <attr name="useFloat" format="boolean" />
         <attr name="defaultValue" format="float" />
-        <attr name="changeFactor" format="integer" />
+        <attr name="changeFactor" format="float" />
         <attr name="unitTypes" format="enum">
             <enum name="minutes" value="0" />
             <enum name="hours" value="1" />
