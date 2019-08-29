@@ -5,6 +5,7 @@ import android.content.Context
 import android.graphics.Color
 import android.os.Handler
 import android.util.AttributeSet
+import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.widget.ImageButton
@@ -58,7 +59,11 @@ class CustomUnitView : ConstraintLayout {
     private var defaultAmount = -1F
     private var changeFactor = -1F
 
-    private var unitTextColor = Color.TRANSPARENT
+    private var titleTextColor = Color.TRANSPARENT
+    private var descTextColor = Color.TRANSPARENT
+
+    private var titleTextSize = -1
+    private var descTextSize = -1
 
     private var currentAmount = 0F
 
@@ -80,7 +85,11 @@ class CustomUnitView : ConstraintLayout {
             typedArray.getFloat(R.styleable.CustomUnitView_defaultValue, -1F).roundOffDecimal()
         changeFactor = typedArray.getFloat(R.styleable.CustomUnitView_changeFactor, -1F).roundOffDecimal()
 
-        unitTextColor = typedArray.getColor(R.styleable.CustomUnitView_unitTextColor, Color.TRANSPARENT)
+        titleTextColor = typedArray.getColor(R.styleable.CustomUnitView_titleTextColor, Color.TRANSPARENT)
+        descTextColor = typedArray.getColor(R.styleable.CustomUnitView_descTextColor, Color.TRANSPARENT)
+
+        titleTextSize = typedArray.getDimensionPixelSize(R.styleable.CustomUnitView_titleTextSize, -1)
+        descTextSize = typedArray.getDimensionPixelSize(R.styleable.CustomUnitView_descTextSize, -1)
 
         typedArray.recycle()
     }
@@ -89,40 +98,52 @@ class CustomUnitView : ConstraintLayout {
         when (unit) {
             MINUTES -> {
                 // minutes
-                updateDefaultAmount(60.0F)
-                updateChangeFactor(5F)
+                updateDefaultAmount(defaultMinutesAmount)
+                updateChangeFactor(defaultMinutesChangeFactor)
 
-                unitTypesText = "minutes a day"
+                unitTypesText = context.getString(R.string.minute_desc)
             }
 
             HOURS -> {
                 // hours
-                updateDefaultAmount(60.0F)
-                updateChangeFactor(1F)
+                updateDefaultAmount(defaultHoursAmount)
+                updateChangeFactor(defaultHoursChangeFactor)
 
-                unitTypesText = "hours a day"
+                unitTypesText = context.getString(R.string.hours_desc)
             }
 
             KG -> {
                 // kg
-                updateDefaultAmount(68.0F)
-                updateChangeFactor(0.5F)
+                updateDefaultAmount(defaultKgAmount)
+                updateChangeFactor(defaultKgChangeFactor)
 
-                unitTypesText = "kilogram"
+                unitTypesText = context.getString(R.string.kg_desc)
             }
 
             LBS -> {
                 // lbs
-                updateDefaultAmount(145.2F)
-                updateChangeFactor(0.5F)
+                updateDefaultAmount(defaultLbsAmount)
+                updateChangeFactor(defaultLbsChangeFactor)
 
-                unitTypesText = "lbs"
+                unitTypesText = context.getString(R.string.lbs_desc)
             }
         }
 
-        if (unitTextColor != Color.TRANSPARENT) {
-            unitAmountTextView.setTextColor(unitTextColor)
-            unitNameTextView.setTextColor(unitTextColor)
+        if (titleTextColor != Color.TRANSPARENT) {
+            unitAmountTextView.setTextColor(titleTextColor)
+            unitNameTextView.setTextColor(titleTextColor) // Always will take the title color
+        }
+
+        if (descTextColor != Color.TRANSPARENT) {
+            unitNameTextView.setTextColor(descTextColor) // Can change the color from here
+        }
+
+        if (titleTextSize != -1) {
+            unitAmountTextView.setTextSize(TypedValue.COMPLEX_UNIT_PX, titleTextSize.toFloat())
+        }
+
+        if (descTextSize != -1) {
+            unitNameTextView.setTextSize(TypedValue.COMPLEX_UNIT_PX, descTextSize.toFloat())
         }
 
         currentAmount = defaultAmount
@@ -286,6 +307,18 @@ class CustomUnitView : ConstraintLayout {
         const val HOURS = 1
         const val KG = 2
         const val LBS = 3
+
+        const val defaultMinutesAmount = 60.0F
+        const val defaultMinutesChangeFactor = 5F
+
+        const val defaultHoursAmount = 60.0F
+        const val defaultHoursChangeFactor = 1F
+
+        const val defaultKgAmount = 68.0F
+        const val defaultKgChangeFactor = 0.5F
+
+        const val defaultLbsAmount = 145.2F
+        const val defaultLbsChangeFactor = 0.5F
     }
 }
 

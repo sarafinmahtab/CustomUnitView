@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">CustomUnitView</string>
+    <string name="minute_desc">minutes a day</string>
+    <string name="hours_desc">hours a day</string>
+    <string name="kg_desc">kilogram</string>
+    <string name="lbs_desc">lbs</string>
 </resources>

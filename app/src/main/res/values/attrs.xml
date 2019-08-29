@@ -10,6 +10,11 @@
             <enum name="kg" value="2" />
             <enum name="lbs" value="3" />
         </attr>
-        <attr name="unitTextColor" format="color|reference" />
+
+        <attr name="titleTextColor" format="color|reference" />
+        <attr name="descTextColor" format="color|reference" />
+
+        <attr name="titleTextSize" format="dimension|reference" />
+        <attr name="descTextSize" format="dimension|reference" />
     </declare-styleable>
 </resources>
