@@ -11,8 +11,6 @@ import android.view.MotionEvent
 import android.widget.ImageButton
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
-import java.math.RoundingMode
-import java.text.DecimalFormat
 
 
 class CustomUnitView : ConstraintLayout {
@@ -81,9 +79,8 @@ class CustomUnitView : ConstraintLayout {
 
         useFloat = typedArray.getBoolean(R.styleable.CustomUnitView_useFloat, false)
         unitType = typedArray.getInteger(R.styleable.CustomUnitView_unitTypes, 0)
-        defaultAmount =
-            typedArray.getFloat(R.styleable.CustomUnitView_defaultValue, -1F).roundOffDecimal()
-        changeFactor = typedArray.getFloat(R.styleable.CustomUnitView_changeFactor, -1F).roundOffDecimal()
+        defaultAmount = typedArray.getFloat(R.styleable.CustomUnitView_defaultValue, -1F)
+        changeFactor = typedArray.getFloat(R.styleable.CustomUnitView_changeFactor, -1F)
 
         titleTextColor = typedArray.getColor(R.styleable.CustomUnitView_titleTextColor, Color.TRANSPARENT)
         descTextColor = typedArray.getColor(R.styleable.CustomUnitView_descTextColor, Color.TRANSPARENT)
@@ -217,16 +214,18 @@ class CustomUnitView : ConstraintLayout {
     }
 
     private fun increment() {
-        currentAmount =
-            (currentAmount + changeFactor).roundOffDecimal() //Double and Float addition/subtraction has some bugs
+        currentAmount += changeFactor
+        currentAmount = currentAmount.roundOffDecimal()
+
         if (currentAmount > maxRange) {
             currentAmount = maxRange
         }
     }
 
     private fun decrement() {
-        currentAmount =
-            (currentAmount - changeFactor).roundOffDecimal() //Double and Float addition/subtraction has some bugs
+        currentAmount -= changeFactor
+        currentAmount = currentAmount.roundOffDecimal()
+
         if (currentAmount < minRange) {
             currentAmount = minRange
         }
@@ -236,10 +235,10 @@ class CustomUnitView : ConstraintLayout {
         try {
             if (useFloat) {
                 unitAmountTextView.text = amount.toString()
-                listener.onAmountChanged(amount.toString())
+                listener.onAmountChanged(amount)
             } else {
                 unitAmountTextView.text = amount.toInt().toString()
-                listener.onAmountChanged(amount.toInt().toString())
+                listener.onAmountChanged(amount)
             }
 
         } catch (e: Exception) {
@@ -251,18 +250,18 @@ class CustomUnitView : ConstraintLayout {
         this.listener = listener
     }
 
-    fun getAmount(): String {
+    fun getAmount(): Float {
         val amount = unitAmountTextView.text.toString()
         if (amount.isNotEmpty()) {
 
             if (!useFloat) {
-                return amount.toInt().toString()
+                return amount.toFloat()
             }
 
-            return amount
+            return amount.toFloat()
         }
 
-        return defaultAmount.toString()
+        return defaultAmount
     }
 
     fun setUseFloat(useFloat: Boolean) {
@@ -323,12 +322,10 @@ class CustomUnitView : ConstraintLayout {
 }
 
 interface UnitAmountChangeListener {
-    fun onAmountChanged(amount: String)
+    fun onAmountChanged(amount: Float)
 }
 
 
 fun Float.roundOffDecimal(): Float {
-    val df = DecimalFormat("#.#")
-    df.roundingMode = RoundingMode.CEILING
-    return df.format(this).toFloat()
+    return String.format("%.2f", this).toFloat()
 }

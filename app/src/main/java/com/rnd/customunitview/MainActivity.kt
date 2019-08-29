@@ -15,11 +15,11 @@ class MainActivity : AppCompatActivity() {
 //        customUnitView.setDefaultValue(2F)
 //        customUnitView.setUnitType(CustomUnitView.HOURS)
 
-        amountTextView.text = customUnitView.getAmount()
+        amountTextView.text = customUnitView.getAmount().toString()
 
         customUnitView.addUnitAmountChangeListener(object : UnitAmountChangeListener {
-            override fun onAmountChanged(amount: String) {
-                amountTextView.text = amount
+            override fun onAmountChanged(amount: Float) {
+                amountTextView.text = amount.toString()
             }
         })
     }
