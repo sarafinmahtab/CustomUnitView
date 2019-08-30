@@ -10,10 +10,10 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-//        customUnitView.setUseFloat(false)
-//        customUnitView.setChangeFactor(2F)
-//        customUnitView.setDefaultValue(2F)
-//        customUnitView.setUnitType(CustomUnitView.HOURS)
+        customUnitView.setUseFloat(true)
+        customUnitView.setChangeFactor(2F)
+        customUnitView.setDefaultValue(2F)
+        customUnitView.setUnitType(CustomUnitView.HOURS)
 
         amountTextView.text = customUnitView.getAmount().toString()
 

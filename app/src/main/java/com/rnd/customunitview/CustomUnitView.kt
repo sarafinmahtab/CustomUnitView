@@ -266,6 +266,7 @@ class CustomUnitView : ConstraintLayout {
 
     fun setUseFloat(useFloat: Boolean) {
         this.useFloat = useFloat
+        updateAmount(getAmount())
     }
 
     fun setChangeFactor(factor: Float) {
