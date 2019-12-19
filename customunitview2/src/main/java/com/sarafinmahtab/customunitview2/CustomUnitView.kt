@@ -1,4 +1,4 @@
-package com.rnd.customunitview
+package com.sarafinmahtab.customunitview2
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -11,7 +11,6 @@ import android.view.MotionEvent
 import android.widget.ImageButton
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
-
 
 class CustomUnitView : ConstraintLayout {
 
@@ -66,7 +65,7 @@ class CustomUnitView : ConstraintLayout {
     private var currentAmount = 0F
 
     private val minRange = 0F
-    private val maxRange = 100000000F
+    private var maxRange = 100000000F
 
 
     private fun setAttributes(context: Context, attrs: AttributeSet?) {
@@ -114,7 +113,7 @@ class CustomUnitView : ConstraintLayout {
                 updateDefaultAmount(defaultKgAmount)
                 updateChangeFactor(defaultKgChangeFactor)
 
-                unitTypesText = context.getString(R.string.kg_desc)
+                unitTypesText = context.getString(R.string.unit_weight_kilogram)
             }
 
             LBS -> {
@@ -122,7 +121,7 @@ class CustomUnitView : ConstraintLayout {
                 updateDefaultAmount(defaultLbsAmount)
                 updateChangeFactor(defaultLbsChangeFactor)
 
-                unitTypesText = context.getString(R.string.lbs_desc)
+                unitTypesText = context.getString(R.string.unit_weight_lb)
             }
         }
 
@@ -269,18 +268,27 @@ class CustomUnitView : ConstraintLayout {
         updateAmount(getAmount())
     }
 
+    fun setMaxRange(maxRange: Float) {
+        this.maxRange = maxRange
+    }
+
     fun setChangeFactor(factor: Float) {
         this.changeFactor = factor
     }
 
     fun setDefaultValue(value: Float) {
         this.defaultAmount = value
+        this.currentAmount = defaultAmount
         updateAmount(value)
     }
 
     fun setUnitType(unit: Int) {
         this.unitType = unit
         initRequiredAttributes(unitType)
+    }
+
+    fun getUnitType() : Int {
+        return unitType
     }
 
     private val counterRunnable = object : Runnable {
@@ -328,5 +336,5 @@ interface UnitAmountChangeListener {
 
 
 fun Float.roundOffDecimal(): Float {
-    return String.format("%.2f", this).toFloat()
+    return String.format("%.1f", this).toFloat()
 }
